@@ -4,47 +4,29 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>AR Model Rotation</title>
-  
-  <!-- Carregar A-Frame (já inclui Three.js) -->
+  <!-- Carregar apenas UMA versão do A-Frame com AR.js (evitando conflitos de Three.js) -->
   <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
-  
-  <!-- Carregar AR.js atualizado -->
-  <script src="https://cdn.jsdelivr.net/gh/AR-js-org/AR.js/aframe/build/aframe-ar-nft.min.js"></script>
-
+  <script src="https://cdn.jsdelivr.net/gh/jeromeetienne/ar.js@1.7.2/aframe/build/aframe-ar.min.js"></script>
 </head>
 <body style="margin: 0; overflow: hidden;">
-  <a-scene embedded arjs>
+  
+  <!-- Cena AR.js sem propriedades desnecessárias -->
+  <a-scene embedded arjs="sourceType: webcam; debugUIEnabled: false;">
     
-    <!-- Definição do marcador Hiro para AR -->
+    <!-- Marcador Hiro -->
     <a-marker preset="hiro">
       <a-entity id="model"
-                gltf-model="https://raw.githubusercontent.com/Mathias-Gui/test/main/25163.kab20.000-0.glb" 
-                scale="0.1 0.1 0.1" 
+                gltf-model="https://raw.githubusercontent.com/Mathias-Gui/test/main/25163.kab20.000-0.glb"
+                scale="0.1 0.1 0.1"
                 position="0 0 0"
                 rotation="0 0 0"
                 animation="property: rotation; to: 0 360 0; loop: true; dur: 4000">
       </a-entity>
     </a-marker>
 
-    <!-- Câmera para visualização -->
-    <a-camera position="0 0 0"></a-camera>
+    <a-camera></a-camera>
 
   </a-scene>
 
   <script>
-    // Debugging: Verificar se o modelo foi carregado corretamente
-    document.querySelector("#model").addEventListener("model-loaded", () => {
-      console.log("✅ Modelo GLB carregado com sucesso!");
-    });
-
-    document.querySelector("#model").addEventListener("error", (event) => {
-      console.error("❌ Erro ao carregar o modelo GLB:", event);
-    });
-
-    // Verificação de carregamento do AR.js
-    if (typeof AFRAME === 'undefined' || typeof ARjs === 'undefined') {
-      alert('⚠️ AR.js ou A-Frame não estão sendo carregados corretamente. Verifique a conexão com a internet ou os links dos scripts.');
-    }
-  </script>
-</body>
-</html>
+    // Verificar se o modelo GLB foi
