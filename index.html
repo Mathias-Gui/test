@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>AR Model Rotation</title>
+  <title>AR Model Rotation with Camera Follow</title>
   <!-- Carregar A-Frame e AR.js -->
   <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
   <script src="https://cdn.jsdelivr.net/gh/jeromeetienne/ar.js@1.7.2/aframe/build/aframe-ar.min.js"></script>
@@ -12,27 +12,47 @@
   
   <!-- Cena AR.js -->
   <a-scene embedded arjs="sourceType: webcam; debugUIEnabled: false; background: transparent;">
+    
     <!-- Marcador Hiro -->
     <a-marker preset="hiro">
       <a-entity id="model"
                 gltf-model="https://raw.githubusercontent.com/Mathias-Gui/test/main/25163.kab20.000-0.glb"
-                scale="0.5 0.5 0.5"  <!-- Aumentei a escala para tornar o modelo maior -->
-                position="0 0.5 0"  <!-- Manter o modelo visível, em cima do marcador -->
+                scale="0.5 0.5 0.5"  <!-- Aumentei a escala -->
+                position="0 0.5 0"  <!-- Posição ajustada -->
                 rotation="0 0 0"
-                animation="property: rotation; to: 0 360 0; loop: true; dur: 4000"
-                material="color: red; opacity: 0.5;"> <!-- Material simples para testar visibilidade -->
+                animation="property: rotation; to: 0 360 0; loop: true; dur: 4000">
       </a-entity>
     </a-marker>
 
-    <!-- Ajuste da posição da câmera -->
-    <a-camera position="0 1.5 2"></a-camera> <!-- Posicionei a câmera para focar no marcador -->
+    <!-- Câmera -->
+    <a-camera id="camera" position="0 1.5 2"></a-camera> <!-- Posição inicial da câmera -->
 
   </a-scene>
 
   <script>
-    // Verificar se o modelo GLB foi carregado corretamente
+    // Referência ao modelo e à câmera
     const model = document.querySelector("#model");
+    const camera = document.querySelector("#camera");
 
+    // Função para fazer a câmera seguir o modelo
+    function updateCameraPosition() {
+      const modelPosition = model.object3D.position;
+      // Posicionar a câmera um pouco atrás do modelo, para criar o efeito de perseguição
+      camera.object3D.position.set(modelPosition.x, modelPosition.y + 1.5, modelPosition.z + 2);
+      // Fazer a câmera olhar para o modelo
+      camera.object3D.lookAt(modelPosition);
+    }
+
+    // A cada quadro, atualizamos a posição da câmera
+    function animate() {
+      updateCameraPosition();
+      requestAnimationFrame(animate);
+    }
+
+    // Iniciar a animação
+    animate();
+
+    // Verificar se o modelo GLB foi carregado corretamente
     model.addEventListener("model-loaded", () => {
       console.log("✅ Modelo GLB carregado com sucesso!");
     });
