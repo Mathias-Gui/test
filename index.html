@@ -3,61 +3,28 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>AR Model Follow</title>
-  <!-- Carregar A-Frame e AR.js -->
+  <title>Testando Modelo GLB</title>
+  <!-- Carregar A-Frame -->
   <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/gh/jeromeetienne/ar.js@1.7.2/aframe/build/aframe-ar.min.js"></script>
 </head>
 <body style="margin: 0; overflow: hidden;">
   
-  <!-- Cena AR.js -->
-  <a-scene embedded arjs="sourceType: webcam; debugUIEnabled: false;">
-    
+  <!-- Cena A-Frame -->
+  <a-scene>
+
     <!-- Modelo GLB -->
     <a-entity id="model"
               gltf-model="https://raw.githubusercontent.com/Mathias-Gui/test/main/25163.kab20.000-0.glb"
               scale="0.5 0.5 0.5"
-              position="0 0 0" <!-- Centraliza o modelo na cena -->
+              position="0 1 0"  <!-- Centralizado na cena -->
               rotation="0 0 0"
               animation="property: rotation; to: 0 360 0; loop: true; dur: 4000">
     </a-entity>
 
-    <!-- Câmera (adaptada para seguir o modelo) -->
-    <a-camera id="camera" position="0 1.5 3" look-controls="pointerLockEnabled: true"></a-camera>
+    <!-- Câmera -->
+    <a-camera position="0 1.5 5"></a-camera> <!-- Posição da câmera ajustada para visualizar o modelo -->
 
   </a-scene>
-
-  <script>
-    // Função para garantir que o modelo GLB está carregado
-    const model = document.querySelector("#model");
-    
-    model.addEventListener("model-loaded", () => {
-      console.log("✅ Modelo GLB carregado com sucesso!");
-    });
-
-    model.addEventListener("error", (event) => {
-      console.error("❌ Erro ao carregar o modelo GLB:", event);
-      alert("Erro ao carregar o modelo. Veja o console para mais detalhes.");
-    });
-
-    // Função para movimentar a câmera de acordo com a posição do modelo
-    function updateCameraPosition() {
-      const modelPosition = model.object3D.position;
-      const camera = document.querySelector("#camera");
-      camera.object3D.position.set(modelPosition.x, modelPosition.y + 1.5, modelPosition.z + 3);
-      camera.object3D.lookAt(modelPosition);
-    }
-
-    // Atualização contínua da posição da câmera
-    function animate() {
-      updateCameraPosition();
-      requestAnimationFrame(animate);
-    }
-
-    // Iniciar a animação
-    animate();
-
-  </script>
 
 </body>
 </html>
