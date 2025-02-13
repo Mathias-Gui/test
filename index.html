@@ -4,13 +4,19 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>AR Model Rotation</title>
+  <!-- Carregar Three.js -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/gh/jeromeetienne/AR.js/aframe/build/aframe.min.js"></script>
+  <!-- Carregar A-Frame -->
+  <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
+  <!-- Carregar AR.js para A-Frame -->
   <script src="https://cdn.jsdelivr.net/gh/jeromeetienne/AR.js/aframe/build/aframe-ar.js"></script>
 </head>
 <body style="margin: 0; overflow: hidden;">
   <a-scene embedded arjs>
-    <!-- Marcador AR para mostrar o modelo -->
+    <!-- Modelo de Teste: Caixa -->
+    <a-box position="0 0.5 -3" rotation="0 45 0" color="#4CC3D9"></a-box>
+    
+    <!-- Marcador AR para o modelo GLB -->
     <a-marker preset="hiro">
       <!-- Carregar o modelo GLB -->
       <a-entity 
@@ -21,8 +27,17 @@
         <a-animation attribute="rotation" dur="3000" to="360 360 360" repeat="indefinite"></a-animation>
       </a-entity>
     </a-marker>
+
     <!-- Câmera AR -->
     <a-camera></a-camera>
   </a-scene>
+
+  <script>
+    // Verificar se o AR.js está sendo carregado
+    if (typeof AFRAME === 'undefined' || typeof ARjs === 'undefined') {
+      alert('AR.js ou A-Frame não estão sendo carregados corretamente. Verifique a conexão com a internet ou os links dos scripts.');
+    }
+  </script>
 </body>
 </html>
+
