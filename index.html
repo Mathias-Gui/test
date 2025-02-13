@@ -17,14 +17,14 @@
     <a-marker preset="hiro">
       <a-entity id="model"
                 gltf-model="https://raw.githubusercontent.com/Mathias-Gui/test/main/25163.kab20.000-0.glb"
-                scale="0.05 0.05 0.05"  <!-- Diminuído para garantir visibilidade -->
-                position="0 0.2 0"  <!-- Elevado para não ficar dentro do marcador -->
+                scale="0.2 0.2 0.2"  <!-- Aumentei a escala -->
+                position="0 0.5 0"  <!-- Centralizei o modelo acima do marcador -->
                 rotation="0 0 0"
                 animation="property: rotation; to: 0 360 0; loop: true; dur: 4000">
       </a-entity>
     </a-marker>
 
-    <a-camera></a-camera>
+    <a-camera position="0 1 2"></a-camera> <!-- Posicionei a câmera melhor -->
 
   </a-scene>
 
