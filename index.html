@@ -22,9 +22,8 @@
       <a-entity 
         gltf-model="https://raw.githubusercontent.com/Mathias-Gui/test/main/25163.kab20.000-0.glb" 
         scale="0.1 0.1 0.1" 
-        rotation="0 0 0">
-        <!-- Animação de rotação -->
-        <a-animation attribute="rotation" dur="3000" to="360 360 360" repeat="indefinite"></a-animation>
+        rotation="0 0 0"
+        animation__rotate="property: rotation; to: 0 360 0; dur: 2000; loop: true">
       </a-entity>
     </a-marker>
 
@@ -40,4 +39,3 @@
   </script>
 </body>
 </html>
-
