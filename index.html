@@ -4,21 +4,21 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>AR Model Rotation</title>
-  <!-- Carregar apenas UMA versão do A-Frame com AR.js (evitando conflitos de Three.js) -->
+  <!-- Carregar A-Frame e AR.js -->
   <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
   <script src="https://cdn.jsdelivr.net/gh/jeromeetienne/ar.js@1.7.2/aframe/build/aframe-ar.min.js"></script>
 </head>
 <body style="margin: 0; overflow: hidden;">
   
-  <!-- Cena AR.js sem propriedades desnecessárias -->
+  <!-- Cena AR.js -->
   <a-scene embedded arjs="sourceType: webcam; debugUIEnabled: false;">
     
     <!-- Marcador Hiro -->
     <a-marker preset="hiro">
       <a-entity id="model"
                 gltf-model="https://raw.githubusercontent.com/Mathias-Gui/test/main/25163.kab20.000-0.glb"
-                scale="0.1 0.1 0.1"
-                position="0 0 0"
+                scale="0.05 0.05 0.05"  <!-- Diminuído para garantir visibilidade -->
+                position="0 0.2 0"  <!-- Elevado para não ficar dentro do marcador -->
                 rotation="0 0 0"
                 animation="property: rotation; to: 0 360 0; loop: true; dur: 4000">
       </a-entity>
@@ -29,4 +29,23 @@
   </a-scene>
 
   <script>
-    // Verificar se o modelo GLB foi
+    // Verificar se o modelo GLB foi carregado corretamente
+    const model = document.querySelector("#model");
+
+    model.addEventListener("model-loaded", () => {
+      console.log("✅ Modelo GLB carregado com sucesso!");
+    });
+
+    model.addEventListener("error", (event) => {
+      console.error("❌ Erro ao carregar o modelo GLB:", event);
+      alert("Erro ao carregar o modelo. Veja o console para mais detalhes.");
+    });
+
+    // Verificar se AR.js e A-Frame estão carregados corretamente
+    if (typeof AFRAME === 'undefined' || typeof ARjs === 'undefined') {
+      alert("❌ ERRO: AR.js ou A-Frame não foram carregados corretamente!");
+    }
+  </script>
+
+</body>
+</html>
