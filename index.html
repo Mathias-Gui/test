@@ -4,26 +4,21 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>AR Model Rotation</title>
-  <!-- Carregar Three.js -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-  <!-- Carregar A-Frame -->
+  <!-- Carregar A-Frame (já inclui Three.js) -->
   <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
   <!-- Carregar AR.js para A-Frame -->
   <script src="https://cdn.jsdelivr.net/gh/jeromeetienne/AR.js/aframe/build/aframe-ar.js"></script>
 </head>
 <body style="margin: 0; overflow: hidden;">
   <a-scene embedded arjs>
-    <!-- Modelo de Teste: Caixa -->
-    <a-box position="0 0.5 -3" rotation="0 45 0" color="#4CC3D9"></a-box>
     
-    <!-- Marcador AR para o modelo GLB -->
+    <!-- Marcador Hiro -->
     <a-marker preset="hiro">
-      <!-- Carregar o modelo GLB -->
-      <a-entity 
-        gltf-model="https://raw.githubusercontent.com/Mathias-Gui/test/main/25163.kab20.000-0.glb" 
-        scale="0.1 0.1 0.1" 
-        rotation="0 0 0"
-        animation__rotate="property: rotation; to: 0 360 0; dur: 2000; loop: true">
+      <a-entity id="model"
+                gltf-model="https://raw.githubusercontent.com/Mathias-Gui/test/main/25163.kab20.000-0.glb" 
+                scale="0.1 0.1 0.1" 
+                rotation="0 0 0"
+                animation="property: rotation; to: 0 360 0; loop: true; dur: 4000">
       </a-entity>
     </a-marker>
 
@@ -32,7 +27,15 @@
   </a-scene>
 
   <script>
-    // Verificar se o AR.js está sendo carregado
+    document.querySelector("#model").addEventListener("model-loaded", () => {
+      console.log("Modelo GLB carregado com sucesso!");
+    });
+
+    document.querySelector("#model").addEventListener("error", (event) => {
+      console.error("Erro ao carregar o modelo GLB", event);
+    });
+
+    // Verificação de carregamento do AR.js
     if (typeof AFRAME === 'undefined' || typeof ARjs === 'undefined') {
       alert('AR.js ou A-Frame não estão sendo carregados corretamente. Verifique a conexão com a internet ou os links dos scripts.');
     }
