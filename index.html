@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AR Model Rotation</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/gh/jeromeetienne/AR.js/aframe/build/aframe.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/gh/jeromeetienne/AR.js/aframe/build/aframe-ar.js"></script>
+</head>
+<body style="margin: 0; overflow: hidden;">
+  <a-scene embedded arjs>
+    <!-- Marcador AR para mostrar o modelo -->
+    <a-marker preset="hiro">
+      <!-- Carregar o modelo GLB -->
+      <a-entity 
+        gltf-model="https://raw.githubusercontent.com/Mathias-Gui/test/main/25163.kab20.000-0.glb" 
+        scale="0.1 0.1 0.1" 
+        rotation="0 0 0">
+        <!-- Animação de rotação -->
+        <a-animation attribute="rotation" dur="3000" to="360 360 360" repeat="indefinite"></a-animation>
+      </a-entity>
+    </a-marker>
+    <!-- Câmera AR -->
+    <a-camera></a-camera>
+  </a-scene>
+</body>
+</html>
