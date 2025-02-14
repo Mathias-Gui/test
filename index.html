@@ -3,62 +3,29 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Modelo GLB Interativo com AR</title>
-  
-  <!-- Carregar A-Frame e AR.js -->
+  <title>Modelo GLB Interativo</title>
   <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
-  <script src="https://aframe.io/releases/1.2.0/aframe-ar.js"></script>
-
-  <!-- Biblioteca para controles Orbit -->
   <script src="https://cdn.jsdelivr.net/npm/three@0.125.1/examples/js/controls/OrbitControls.js"></script>
-
-  <style>
-    body {
-      margin: 0;
-      overflow: hidden;
-    }
-    a-scene {
-      width: 100vw;
-      height: 100vh;
-    }
-  </style>
 </head>
-<body>
-  
-  <!-- A cena de AR com A-Frame -->
-  <a-scene 
-    embedded 
-    arjs 
-    vr-mode-ui="enabled: false"  <!-- Desabilitar o ícone do binóculo -->
-    renderer="antialias: true; alpha: true;">
+<body style="margin: 0; overflow: hidden;"> 
 
-    <!-- Definindo a câmera -->
-    <a-entity camera></a-entity>
-
-    <!-- Modelo GLB -->
-    <a-entity id="model"
-              gltf-model="https://raw.githubusercontent.com/Mathias-Gui/test/main/25163.kab20.000-0.glb"
-              scale="1 1 1"
-              position="0 1 -3"
-              rotation="0 0 0">
-    </a-entity>
-
-    <!-- Definir a luz para a cena -->
+  <a-scene>
+    <!-- Luzes para melhor visualização -->
     <a-light type="ambient" color="#ffffff" intensity="1"></a-light>
     <a-light type="directional" position="1 1 1" intensity="0.5"></a-light>
 
-    <!-- Marcador para AR.js -->
-    <a-marker preset="hiro">
-      <!-- Aqui pode adicionar o modelo GLB ou qualquer outro objeto 3D -->
-      <a-entity gltf-model="https://raw.githubusercontent.com/Mathias-Gui/test/main/25163.kab20.000-0.glb" scale="1 1 1" position="0 0 0">
-      </a-entity>
-    </a-marker>
+    <!-- Modelo 3D -->
+    <a-entity id="model"
+              gltf-model="https://raw.githubusercontent.com/Mathias-Gui/test/main/25163.kab20.000-0.glb"
+              scale="1 1 1"
+              position="0 1 -3"> <!-- Ajuste na posição -->
+    </a-entity>
 
-    <!-- Definir a luz para AR -->
-    <a-light type="ambient" color="#ffffff" intensity="1"></a-light>
+    <!-- Câmera -->
+    <a-entity id="cameraRig">
+      <a-camera id="camera" position="0 1.5 3"></a-camera>
+    </a-entity>
 
-    <!-- Definindo o fundo transparente para o AR -->
-    <a-plane position="0 0 0" rotation="-90 0 0" width="100" height="100" material="color: transparent; opacity: 0;"></a-plane>
   </a-scene>
 
   <script>
@@ -74,23 +41,48 @@
           return;
         }
 
+        // Criando os controles de órbita (somente rotação)
         var controls = new THREE.OrbitControls(camera, renderer.domElement);
-        controls.enableDamping = true;
+        controls.enableDamping = true;  // Suaviza a rotação
         controls.dampingFactor = 0.25;
         controls.screenSpacePanning = false;
-        controls.enableZoom = true;  // Habilita zoom via roda do mouse
-        controls.minDistance = 1;
-        controls.maxDistance = 10;
+        controls.enableZoom = false;  // Desabilita o zoom
+
+        // Esperar o modelo carregar
+        var modelEl = document.getElementById('model');
+        modelEl.addEventListener('model-loaded', function () {
+          var modelObject3D = modelEl.object3D;
+
+          // Calculando o Bounding Box (caixa delimitadora)
+          var box = new THREE.Box3().setFromObject(modelObject3D);
+          var size = new THREE.Vector3();
+          box.getSize(size);  // Obtém as dimensões do modelo
+          
+          // Calculando o centro do modelo
+          var center = box.getCenter(new THREE.Vector3());
+          controls.target.set(center.x, center.y, center.z);  // Define o centro do modelo como alvo da câmera
+
+          // Calculando a distância adequada para a câmera
+          var maxDimension = Math.max(size.x, size.y, size.z);
+          var cameraDistance = maxDimension * 2; // Ajuste a distância conforme necessário
+          camera.position.set(center.x, center.y, cameraDistance); // Ajusta a posição da câmera
+
+          controls.update(); // Atualiza o controle após definir o novo alvo e posição da câmera
+        });
+
+        // Configura os botões do mouse
         controls.mouseButtons = {
           LEFT: THREE.MOUSE.ROTATE,  // Rotação ao segurar o botão esquerdo
-          MIDDLE: null,              // Remover zoom com botão do meio
-          RIGHT: null                // Desabilitar o botão direito
+          MIDDLE: null,              // Desabilita zoom com o botão do meio
+          RIGHT: null                // ❌ Desativa qualquer função para o botão direito
         };
 
-        controls.enablePan = false;  // Desativa o movimento lateral (pan)
+        // Evita que a rotação altere o zoom
+        controls.enablePan = false;  // Desativa o pan (movimento lateral)
       }
     });
 
+    // Adiciona o componente de controle de órbita à câmera
     document.getElementById('cameraRig').setAttribute('orbit-controls', '');
   </script>
 
