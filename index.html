@@ -47,20 +47,18 @@
         controls.screenSpacePanning = false;
         controls.minDistance = 1;
         controls.maxDistance = 10;
-        controls.target.set(0, 1, 0);
+
+        // 🔥 Correção: Centralizar a rotação no modelo
+        controls.target.set(0, 1, -2); // Ajusta o ponto central da rotação para coincidir com o modelo
         controls.update();
 
-        // ✅ Permitir rotação apenas segurando o botão esquerdo do mouse
+        // 🔥 Correção: O scroll só faz zoom, não rotaciona o modelo
         controls.mouseButtons = {
           LEFT: THREE.MOUSE.ROTATE,  // Rotação ao segurar o botão esquerdo
           MIDDLE: THREE.MOUSE.DOLLY, // Zoom com o scroll
           RIGHT: null                // ❌ Remove qualquer função do botão direito
         };
-      }
-    });
 
-    document.getElementById('cameraRig').setAttribute('orbit-controls', '');
-  </script>
-
-</body>
-</html>
+        // 🔥 Correção: O scroll não deve rotacionar
+        controls.touches = {
+          ONE: THREE.TOUCH.ROTATE,   // Arrasto
