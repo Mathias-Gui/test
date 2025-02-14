@@ -9,7 +9,7 @@
 </head>
 <body style="margin: 0; overflow: hidden;">
   
-  <a-scene>
+  <a-scene embedded>
     <!-- Luzes para melhor visualização -->
     <a-light type="ambient" color="#ffffff"></a-light>
     <a-light type="directional" position="1 1 1" intensity="0.5"></a-light>
@@ -18,7 +18,7 @@
     <a-entity id="model"
               gltf-model="https://raw.githubusercontent.com/Mathias-Gui/test/main/25163.kab20.000-0.glb"
               scale="1 1 1"
-              position="0 1 -2">
+              position="0 1 0">
     </a-entity>
 
     <!-- Câmera -->
@@ -48,17 +48,26 @@
         controls.minDistance = 1;
         controls.maxDistance = 10;
 
-        // 🔥 Correção: Centralizar a rotação no modelo
-        controls.target.set(0, 1, -2); // Ajusta o ponto central da rotação para coincidir com o modelo
+        // 🔥 Correção: Centraliza a rotação no modelo
+        controls.target.set(0, 1, 0); 
         controls.update();
 
-        // 🔥 Correção: O scroll só faz zoom, não rotaciona o modelo
+        // 🔥 Garantindo que o botão esquerdo do mouse roteie e o scroll faça apenas zoom
         controls.mouseButtons = {
           LEFT: THREE.MOUSE.ROTATE,  // Rotação ao segurar o botão esquerdo
           MIDDLE: THREE.MOUSE.DOLLY, // Zoom com o scroll
           RIGHT: null                // ❌ Remove qualquer função do botão direito
         };
 
-        // 🔥 Correção: O scroll não deve rotacionar
-        controls.touches = {
-          ONE: THREE.TOUCH.ROTATE,   // Arrasto
+        // 🔥 Permite rotação 360° corretamente
+        controls.enableRotate = true;
+        controls.enableZoom = true;
+        controls.enablePan = false; // Desativamos pan para evitar que o modelo "saia do centro"
+      }
+    });
+
+    document.getElementById('cameraRig').setAttribute('orbit-controls', '');
+  </script>
+
+</body>
+</html>
