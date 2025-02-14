@@ -10,7 +10,7 @@
 <body style="margin: 0; overflow: hidden;">
   
   <a-scene>
-    <!-- Luz ambiente para melhor visualização -->
+    <!-- Luzes para melhor visualização -->
     <a-light type="ambient" color="#ffffff"></a-light>
     <a-light type="directional" position="1 1 1" intensity="0.5"></a-light>
 
@@ -21,7 +21,7 @@
               position="0 1 -2">
     </a-entity>
 
-    <!-- Câmera com controles orbitais -->
+    <!-- Câmera -->
     <a-entity id="cameraRig">
       <a-camera id="camera" position="0 1.5 3"></a-camera>
     </a-entity>
@@ -47,8 +47,15 @@
         controls.screenSpacePanning = false;
         controls.minDistance = 1;
         controls.maxDistance = 10;
-        controls.target.set(0, 1, 0); 
+        controls.target.set(0, 1, 0);
         controls.update();
+
+        // 🔥 Ajuste: Permitir rotação apenas com o botão esquerdo do mouse
+        controls.mouseButtons = {
+          LEFT: THREE.MOUSE.ROTATE,   // Rotação ao segurar o botão esquerdo
+          MIDDLE: THREE.MOUSE.DOLLY,   // Zoom com botão do meio
+          RIGHT: THREE.MOUSE.PAN       // Pan com botão direito
+        };
       }
     });
 
