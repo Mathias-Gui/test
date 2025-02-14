@@ -3,28 +3,51 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Modelo GLB Interativo</title>
+  <title>Modelo Interativo GLB</title>
   <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.125.1/examples/js/controls/OrbitControls.js"></script>
 </head>
 <body style="margin: 0; overflow: hidden;">
-  
-  <!-- Cena A-Frame -->
-  <a-scene>
 
-    <!-- Modelo GLB -->
+  <a-scene embedded>
+    
+    <!-- Modelo 3D -->
     <a-entity id="model"
               gltf-model="https://raw.githubusercontent.com/Mathias-Gui/test/main/25163.kab20.000-0.glb"
               scale="0.5 0.5 0.5"
               position="0 1 0">
     </a-entity>
 
-    <!-- Câmera controlável pelo usuário -->
+    <!-- Câmera -->
     <a-entity id="cameraRig">
-      <a-camera position="0 1.5 3" wasd-controls-enabled="false" look-controls></a-camera>
+      <a-camera id="camera" position="0 1.5 3"></a-camera>
     </a-entity>
 
   </a-scene>
 
+  <script>
+    AFRAME.registerComponent('orbit-controls', {
+      init: function () {
+        var sceneEl = this.el.sceneEl;
+        var cameraEl = document.getElementById('camera');
+        var renderer = sceneEl.renderer;
+        var camera = cameraEl.getObject3D('camera');
+
+        // Adicionando OrbitControls para permitir giro livre do modelo
+        var controls = new THREE.OrbitControls(camera, renderer.domElement);
+        controls.enableDamping = true;  // Suaviza o movimento
+        controls.dampingFactor = 0.05;  // Ajuste fino da suavização
+        controls.screenSpacePanning = false;  // Bloqueia pan lateral
+        controls.minDistance = 1;  // Aproximação mínima
+        controls.maxDistance = 10; // Distância máxima do modelo
+        controls.target.set(0, 1, 0); // Foca no modelo
+        controls.update();
+      }
+    });
+
+    // Adiciona o componente de controles à câmera
+    document.getElementById('cameraRig').setAttribute('orbit-controls', '');
+  </script>
+
 </body>
 </html>
-
