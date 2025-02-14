@@ -46,9 +46,11 @@
         controls.enableDamping = true;  // Suaviza a rotação
         controls.dampingFactor = 0.25;
         controls.screenSpacePanning = false;
-        controls.enableZoom = true;  // Habilita zoom via roda do mouse
-        controls.minDistance = 1;    // Distância mínima para o zoom
-        controls.maxDistance = 10;   // Distância máxima para o zoom
+
+        // Desativa a rotação com a roda do mouse e move somente com o botão esquerdo
+        controls.enableZoom = true;  // Zoom com o scroll do mouse
+        controls.enableRotate = true;  // Habilita rotação
+        controls.enablePan = false;  // Desabilita pan (movimento lateral)
 
         // Esperar o modelo carregar
         var modelEl = document.getElementById('model');
@@ -72,19 +74,12 @@
           controls.update(); // Atualiza o controle após definir o novo alvo e posição da câmera
         });
 
-        // Configura os botões do mouse
+        // Modificando os botões do mouse
         controls.mouseButtons = {
-          LEFT: THREE.MOUSE.ROTATE,  // Rotação ao segurar o botão esquerdo
-          MIDDLE: null,              // Remove o zoom do botão do meio
-          RIGHT: null                // ❌ Desativa qualquer função para o botão direito
+          LEFT: THREE.MOUSE.ROTATE,  // Somente rotação com o botão esquerdo
+          MIDDLE: null,              // Desativa a função de zoom com o botão do meio
+          RIGHT: null                // Desativa qualquer função para o botão direito
         };
-
-        // Desativa o pan (movimento lateral) para impedir que o modelo se mova enquanto gira
-        controls.enablePan = false;
-
-        // Permite o zoom apenas com a roda do mouse (sem alterar a rotação)
-        controls.enableRotate = true;
-        controls.enableZoom = true;
       }
     });
 
