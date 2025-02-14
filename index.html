@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Testando Modelo GLB</title>
+  <title>Modelo GLB com Movimento</title>
   <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
 </head>
 <body style="margin: 0; overflow: hidden;">
@@ -11,11 +11,13 @@
   <!-- Cena A-Frame -->
   <a-scene>
     
-    <!-- Modelo GLB -->
+    <!-- Modelo GLB com animação de rotação contínua -->
     <a-entity id="model"
               gltf-model="https://raw.githubusercontent.com/Mathias-Gui/test/main/25163.kab20.000-0.glb"
               scale="0.5 0.5 0.5"
-              position="0 1 0">
+              position="0 1 0"
+              rotation="0 0 0"
+              animation="property: rotation; to: 0 360 0; loop: true; dur: 10000">
     </a-entity>
 
     <!-- Câmera -->
