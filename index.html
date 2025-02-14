@@ -50,11 +50,11 @@
         controls.target.set(0, 1, 0);
         controls.update();
 
-        // 🔥 Ajuste: Permitir rotação apenas com o botão esquerdo do mouse
+        // ✅ Permitir rotação apenas segurando o botão esquerdo do mouse
         controls.mouseButtons = {
-          LEFT: THREE.MOUSE.ROTATE,   // Rotação ao segurar o botão esquerdo
-          MIDDLE: THREE.MOUSE.DOLLY,   // Zoom com botão do meio
-          RIGHT: THREE.MOUSE.PAN       // Pan com botão direito
+          LEFT: THREE.MOUSE.ROTATE,  // Rotação ao segurar o botão esquerdo
+          MIDDLE: THREE.MOUSE.DOLLY, // Zoom com o scroll
+          RIGHT: null                // ❌ Remove qualquer função do botão direito
         };
       }
     });
