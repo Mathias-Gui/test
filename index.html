@@ -79,8 +79,12 @@
           RIGHT: null                // ❌ Desativa qualquer função para o botão direito
         };
 
-        // Evita que a rotação altere o zoom
-        controls.enablePan = false;  // Desativa o pan (movimento lateral)
+        // Desativa o pan (movimento lateral) para impedir que o modelo se mova enquanto gira
+        controls.enablePan = false;
+
+        // Permite o zoom apenas com a roda do mouse (sem alterar a rotação)
+        controls.enableRotate = true;
+        controls.enableZoom = true;
       }
     });
 
