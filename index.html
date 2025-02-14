@@ -5,30 +5,62 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Modelo GLB Interativo</title>
   <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.125.1/examples/js/controls/OrbitControls.js"></script>
 </head>
 <body style="margin: 0; overflow: hidden;">
   
   <a-scene>
-    <!-- 🔥 Luzes para garantir visibilidade -->
-    <a-light type="ambient" color="#ffffff" intensity="1"></a-light>
-    <a-light type="directional" position="3 5 2" intensity="1.5"></a-light>
+    <!-- Luzes para melhor visualização -->
+    <a-light type="ambient" color="#ffffff"></a-light>
+    <a-light type="directional" position="1 1 1" intensity="0.5"></a-light>
 
-    <!-- 🔥 Modelo 3D com a posição ajustada -->
+    <!-- Modelo 3D -->
     <a-entity id="model"
               gltf-model="https://raw.githubusercontent.com/Mathias-Gui/test/main/25163.kab20.000-0.glb"
               scale="1 1 1"
-              position="0 0 -3"> <!-- Posição ajustada -->
+              position="0 1 -2">
     </a-entity>
 
-    <!-- 🔥 Câmera com look-controls -->
-    <a-entity id="cameraRig" position="0 1.5 5"> <!-- Distância maior -->
-      <a-camera id="camera" look-controls wasd-controls="enabled:false"></a-camera>
+    <!-- Câmera -->
+    <a-entity id="cameraRig">
+      <a-camera id="camera" position="0 1.5 3"></a-camera>
     </a-entity>
 
   </a-scene>
 
   <script>
-    document.addEventListener("DOMContentLoaded", function() {
-      const sceneEl = document.querySelector("a-scene");
-      const cameraEl = document.querySelector("#camera");
-      const modelEl = document.q
+    AFRAME.registerComponent('orbit-controls', {
+      init: function () {
+        var sceneEl = this.el.sceneEl;
+        var cameraEl = document.getElementById('camera');
+        var renderer = sceneEl.renderer;
+        var camera = cameraEl.getObject3D('camera');
+
+        if (!camera) {
+          console.error("Câmera não encontrada! Certifique-se de que o A-Frame carregou corretamente.");
+          return;
+        }
+
+        var controls = new THREE.OrbitControls(camera, renderer.domElement);
+        controls.enableDamping = true;
+        controls.dampingFactor = 0.1;
+        controls.screenSpacePanning = false;
+        controls.minDistance = 1;
+        controls.maxDistance = 10;
+        controls.target.set(0, 1, 0);
+        controls.update();
+
+        // ✅ Permitir rotação apenas segurando o botão esquerdo do mouse
+        controls.mouseButtons = {
+          LEFT: THREE.MOUSE.ROTATE,  // Rotação ao segurar o botão esquerdo
+          MIDDLE: THREE.MOUSE.DOLLY, // Zoom com o scroll
+          RIGHT: null                // ❌ Remove qualquer função do botão direito
+        };
+      }
+    });
+
+    document.getElementById('cameraRig').setAttribute('orbit-controls', '');
+  </script>
+
+</body>
+</html>
