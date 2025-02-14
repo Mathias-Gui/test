@@ -41,14 +41,14 @@
           return;
         }
 
-        // Criando os controles de órbita (somente rotação)
+        // Criando os controles de órbita (rotação e zoom)
         var controls = new THREE.OrbitControls(camera, renderer.domElement);
         controls.enableDamping = true;  // Suaviza a rotação
         controls.dampingFactor = 0.25;
         controls.screenSpacePanning = false;
-        controls.enableZoom = false;  // Desativa zoom via scroll aqui
-        controls.enablePan = false;  // Desativa o movimento lateral
-        controls.enableRotate = true; // Garante que apenas a rotação esteja ativa por padrão
+        controls.enableZoom = true;  // Habilita zoom via roda do mouse
+        controls.minDistance = 1;    // Distância mínima para o zoom
+        controls.maxDistance = 10;   // Distância máxima para o zoom
 
         // Esperar o modelo carregar
         var modelEl = document.getElementById('model');
@@ -75,30 +75,12 @@
         // Configura os botões do mouse
         controls.mouseButtons = {
           LEFT: THREE.MOUSE.ROTATE,  // Rotação ao segurar o botão esquerdo
-          MIDDLE: null,              // Desabilita zoom com o botão do meio
+          MIDDLE: null,              // Remove o zoom do botão do meio
           RIGHT: null                // ❌ Desativa qualquer função para o botão direito
         };
 
-        // Adiciona evento para controlar o zoom com o scroll do mouse
-        var scrollHandler = function (event) {
-          // Scroll para baixo (afasta) ou para cima (aproxima)
-          if (event.deltaY > 0) {
-            // Zoom para afastar
-            controls.dollyOut(1.1);
-          } else {
-            // Zoom para aproximar
-            controls.dollyIn(1.1);
-          }
-          event.preventDefault(); // Previne o comportamento padrão do scroll (não rolar a página)
-        };
-        
-        // Escuta o evento de scroll
-        window.addEventListener('wheel', scrollHandler);
-
-        // Limpeza do evento de scroll
-        this.el.addEventListener('remove', function () {
-          window.removeEventListener('wheel', scrollHandler);
-        });
+        // Evita que a rotação altere o zoom
+        controls.enablePan = false;  // Desativa o pan (movimento lateral)
       }
     });
 
