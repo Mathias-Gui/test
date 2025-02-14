@@ -3,36 +3,39 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Modelo GLB Interativo</title>
+  <title>Modelo GLB Interativo com AR</title>
   <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/three@0.125.1/examples/js/controls/OrbitControls.js"></script>
+  <!-- AR.js -->
+  <script src="https://cdn.jsdelivr.net/npm/ar.js/aframe/build/aframe-ar.js"></script>
 </head>
 <body style="margin: 0; overflow: hidden;"> 
 
-  <a-scene>
+  <!-- Cena AR com A-Frame -->
+  <a-scene embedded arjs>
     <!-- Luzes para melhor visualização -->
     <a-light type="ambient" color="#ffffff" intensity="1"></a-light>
     <a-light type="directional" position="1 1 1" intensity="0.5"></a-light>
 
-    <!-- Modelo 3D -->
-    <a-entity id="model"
-              gltf-model="https://raw.githubusercontent.com/Mathias-Gui/test/main/kab20.glb.glb"
-              scale="1 1 1"
-              position="0 1 -3"> <!-- Ajuste na posição -->
-    </a-entity>
+    <!-- Marker para AR -->
+    <a-marker preset="hiro">
+      <!-- Modelo 3D -->
+      <a-entity id="model"
+                gltf-model="https://raw.githubusercontent.com/Mathias-Gui/test/main/kab20.glb.glb"
+                scale="1 1 1"
+                position="0 0 0"> <!-- Ajuste na posição -->
+      </a-entity>
+    </a-marker>
 
-    <!-- Câmera -->
-    <a-entity id="cameraRig">
-      <a-camera id="camera" position="0 1.5 3"></a-camera>
-    </a-entity>
-
+    <!-- Câmera AR -->
+    <a-entity camera></a-entity>
   </a-scene>
 
   <script>
     AFRAME.registerComponent('orbit-controls', {
       init: function () {
         var sceneEl = this.el.sceneEl;
-        var cameraEl = document.getElementById('camera');
+        var cameraEl = document.querySelector('[camera]');
         var renderer = sceneEl.renderer;
         var camera = cameraEl.getObject3D('camera');
 
@@ -42,50 +45,4 @@
         }
 
         // Criando os controles de órbita (rotação e zoom)
-        var controls = new THREE.OrbitControls(camera, renderer.domElement);
-        controls.enableDamping = true;  // Suaviza a rotação
-        controls.dampingFactor = 0.25;
-        controls.screenSpacePanning = false;
-
-        // Desativa a rotação com a roda do mouse e move somente com o botão esquerdo
-        controls.enableZoom = true;  // Zoom com o scroll do mouse
-        controls.enableRotate = true;  // Habilita rotação
-        controls.enablePan = false;  // Desabilita pan (movimento lateral)
-
-        // Esperar o modelo carregar
-        var modelEl = document.getElementById('model');
-        modelEl.addEventListener('model-loaded', function () {
-          var modelObject3D = modelEl.object3D;
-
-          // Calculando o Bounding Box (caixa delimitadora)
-          var box = new THREE.Box3().setFromObject(modelObject3D);
-          var size = new THREE.Vector3();
-          box.getSize(size);  // Obtém as dimensões do modelo
-          
-          // Calculando o centro do modelo
-          var center = box.getCenter(new THREE.Vector3());
-          controls.target.set(center.x, center.y, center.z);  // Define o centro do modelo como alvo da câmera
-
-          // Calculando a distância adequada para a câmera
-          var maxDimension = Math.max(size.x, size.y, size.z);
-          var cameraDistance = maxDimension * 2; // Ajuste a distância conforme necessário
-          camera.position.set(center.x, center.y, cameraDistance); // Ajusta a posição da câmera
-
-          controls.update(); // Atualiza o controle após definir o novo alvo e posição da câmera
-        });
-
-        // Modificando os botões do mouse
-        controls.mouseButtons = {
-          LEFT: THREE.MOUSE.ROTATE,  // Somente rotação com o botão esquerdo
-          MIDDLE: null,              // Desativa a função de zoom com o botão do meio
-          RIGHT: null                // Desativa qualquer função para o botão direito
-        };
-      }
-    });
-
-    // Adiciona o componente de controle de órbita à câmera
-    document.getElementById('cameraRig').setAttribute('orbit-controls', '');
-  </script>
-
-</body>
-</html>
+        var co
