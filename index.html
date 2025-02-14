@@ -5,68 +5,65 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Modelo GLB Interativo</title>
   <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/three@0.125.1/examples/js/controls/OrbitControls.js"></script>
 </head>
 <body style="margin: 0; overflow: hidden;">
   
-  <a-scene embedded>
-    <!-- 🔥 Luzes melhoradas para visibilidade -->
+  <a-scene>
+    <!-- 🔥 Luzes para garantir visibilidade -->
     <a-light type="ambient" color="#ffffff" intensity="1"></a-light>
-    <a-light type="directional" position="2 4 5" intensity="1"></a-light>
+    <a-light type="directional" position="3 5 2" intensity="1.5"></a-light>
 
-    <!-- 🔥 Modelo 3D - Posição Ajustada para Ficar Visível -->
+    <!-- 🔥 Modelo 3D - Agora garantimos que ele carregou -->
     <a-entity id="model"
               gltf-model="https://raw.githubusercontent.com/Mathias-Gui/test/main/25163.kab20.000-0.glb"
               scale="1 1 1"
-              position="0 0 -3">
+              position="0 1 -3">
     </a-entity>
 
-    <!-- 🔥 Câmera com Controle de Visão -->
-    <a-entity id="cameraRig">
-      <a-camera id="camera" position="0 1.5 3" look-controls></a-camera>
+    <!-- 🔥 Câmera com look-controls -->
+    <a-entity id="cameraRig" position="0 1.5 3">
+      <a-camera id="camera" look-controls wasd-controls="enabled:false"></a-camera>
     </a-entity>
 
   </a-scene>
 
   <script>
-    AFRAME.registerComponent('orbit-controls', {
-      init: function () {
-        var sceneEl = this.el.sceneEl;
-        var cameraEl = document.getElementById('camera');
-        var renderer = sceneEl.renderer;
-        var camera = cameraEl.getObject3D('camera');
+    document.addEventListener("DOMContentLoaded", function() {
+      const sceneEl = document.querySelector("a-scene");
+      const cameraEl = document.querySelector("#camera");
+      const modelEl = document.querySelector("#model");
 
-        if (!camera) {
-          console.error("Câmera não encontrada! Certifique-se de que o A-Frame carregou corretamente.");
-          return;
-        }
+      // Verifica se o modelo carregou
+      modelEl.addEventListener("model-loaded", () => {
+        console.log("✅ Modelo GLB carregado com sucesso!");
+      });
 
-        var controls = new THREE.OrbitControls(camera, renderer.domElement);
-        controls.enableDamping = true;
-        controls.dampingFactor = 0.1;
-        controls.screenSpacePanning = false;
-        controls.minDistance = 1;
-        controls.maxDistance = 10;
+      let isMouseDown = false;
+      
+      sceneEl.addEventListener("mousedown", (event) => {
+        if (event.button === 0) isMouseDown = true; // Somente botão esquerdo do mouse
+      });
 
-        // 🔥 Garante que o modelo está no centro da rotação
-        controls.target.set(0, 0, -3); 
-        controls.update();
+      sceneEl.addEventListener("mouseup", () => {
+        isMouseDown = false;
+      });
 
-        // 🔥 Rotação com botão esquerdo, zoom com scroll
-        controls.mouseButtons = {
-          LEFT: THREE.MOUSE.ROTATE,
-          MIDDLE: THREE.MOUSE.DOLLY,
-          RIGHT: null
-        };
+      sceneEl.addEventListener("mousemove", (event) => {
+        if (!isMouseDown) return; // Só rotaciona se o botão esquerdo estiver pressionado
+        cameraEl.components["look-controls"].yawObject.rotation.y -= event.movementX * 0.002;
+        cameraEl.components["look-controls"].pitchObject.rotation.x -= event.movementY * 0.002;
+      });
 
-        // 🔥 Ativando rotação e zoom corretamente
-        controls.enableRotate = true;
-        controls.enableZoom = true;
-        controls.enablePan = false; 
-      }
+      // 🔥 Ajustando Zoom no Scroll
+      sceneEl.addEventListener("wheel", (event) => {
+        const cameraPos = cameraEl.getAttribute("position");
+        const zoomSpeed = 0.2;
+        
+        cameraPos.z += event.deltaY * zoomSpeed * 0.01;
+        cameraPos.z = Math.max(1, Math.min(cameraPos.z, 10)); // Limita o zoom
+        cameraEl.setAttribute("position", cameraPos);
+      });
     });
-
-    document.getElementById('cameraRig').setAttribute('orbit-controls', '');
   </script>
 
 </body>
