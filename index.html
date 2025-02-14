@@ -46,9 +46,9 @@
         controls.enableDamping = true;  // Suaviza a rotação
         controls.dampingFactor = 0.25;
         controls.screenSpacePanning = false;
-        controls.enableZoom = true;  // Habilita o zoom via roda do mouse
-        controls.minDistance = 1;    // Distância mínima para o zoom
-        controls.maxDistance = 10;   // Distância máxima para o zoom
+        controls.enableZoom = false;  // Desativa zoom via scroll aqui
+        controls.enablePan = false;  // Desativa o movimento lateral
+        controls.enableRotate = true; // Garante que apenas a rotação esteja ativa por padrão
 
         // Esperar o modelo carregar
         var modelEl = document.getElementById('model');
@@ -79,19 +79,17 @@
           RIGHT: null                // ❌ Desativa qualquer função para o botão direito
         };
 
-        // Configura a rotação inversa com a roda do mouse (scroll)
-        controls.zoomSpeed = -1;  // Inverte a direção do zoom (aumentando a distância ao girar para frente)
-        controls.enablePan = false;  // Desativa o pan (movimento lateral)
-
-        // Adiciona evento para modificar a rotação via scroll
+        // Adiciona evento para controlar o zoom com o scroll do mouse
         var scrollHandler = function (event) {
+          // Scroll para baixo (afasta) ou para cima (aproxima)
           if (event.deltaY > 0) {
-            // Scroll para baixo (afasta)
+            // Zoom para afastar
             controls.dollyOut(1.1);
           } else {
-            // Scroll para cima (aproxima)
+            // Zoom para aproximar
             controls.dollyIn(1.1);
           }
+          event.preventDefault(); // Previne o comportamento padrão do scroll (não rolar a página)
         };
         
         // Escuta o evento de scroll
