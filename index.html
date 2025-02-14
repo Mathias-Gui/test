@@ -53,9 +53,13 @@
         // ✅ Permitir rotação apenas segurando o botão esquerdo do mouse
         controls.mouseButtons = {
           LEFT: THREE.MOUSE.ROTATE,  // Rotação ao segurar o botão esquerdo
-          MIDDLE: THREE.MOUSE.DOLLY, // Zoom com o scroll
-          RIGHT: null                // ❌ Remove qualquer função do botão direito
+          MIDDLE: null,              // Desativa a rotação com o botão do meio
+          RIGHT: null                // Desativa a rotação com o botão direito
         };
+
+        // 👇 Remove a interação de zoom pelo movimento da rotação
+        controls.enableZoom = true;
+        controls.enablePan = false; // Desativa o movimento de arraste lateral
       }
     });
 
