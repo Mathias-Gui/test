@@ -10,20 +10,20 @@
 <body style="margin: 0; overflow: hidden;">
   
   <a-scene embedded>
-    <!-- Luzes para melhor visualização -->
-    <a-light type="ambient" color="#ffffff"></a-light>
-    <a-light type="directional" position="1 1 1" intensity="0.5"></a-light>
+    <!-- 🔥 Luzes melhoradas para visibilidade -->
+    <a-light type="ambient" color="#ffffff" intensity="1"></a-light>
+    <a-light type="directional" position="2 4 5" intensity="1"></a-light>
 
-    <!-- Modelo 3D -->
+    <!-- 🔥 Modelo 3D - Posição Ajustada para Ficar Visível -->
     <a-entity id="model"
               gltf-model="https://raw.githubusercontent.com/Mathias-Gui/test/main/25163.kab20.000-0.glb"
               scale="1 1 1"
-              position="0 1 0">
+              position="0 0 -3">
     </a-entity>
 
-    <!-- Câmera -->
+    <!-- 🔥 Câmera com Controle de Visão -->
     <a-entity id="cameraRig">
-      <a-camera id="camera" position="0 1.5 3"></a-camera>
+      <a-camera id="camera" position="0 1.5 3" look-controls></a-camera>
     </a-entity>
 
   </a-scene>
@@ -48,21 +48,21 @@
         controls.minDistance = 1;
         controls.maxDistance = 10;
 
-        // 🔥 Correção: Centraliza a rotação no modelo
-        controls.target.set(0, 1, 0); 
+        // 🔥 Garante que o modelo está no centro da rotação
+        controls.target.set(0, 0, -3); 
         controls.update();
 
-        // 🔥 Garantindo que o botão esquerdo do mouse roteie e o scroll faça apenas zoom
+        // 🔥 Rotação com botão esquerdo, zoom com scroll
         controls.mouseButtons = {
-          LEFT: THREE.MOUSE.ROTATE,  // Rotação ao segurar o botão esquerdo
-          MIDDLE: THREE.MOUSE.DOLLY, // Zoom com o scroll
-          RIGHT: null                // ❌ Remove qualquer função do botão direito
+          LEFT: THREE.MOUSE.ROTATE,
+          MIDDLE: THREE.MOUSE.DOLLY,
+          RIGHT: null
         };
 
-        // 🔥 Permite rotação 360° corretamente
+        // 🔥 Ativando rotação e zoom corretamente
         controls.enableRotate = true;
         controls.enableZoom = true;
-        controls.enablePan = false; // Desativamos pan para evitar que o modelo "saia do centro"
+        controls.enablePan = false; 
       }
     });
 
