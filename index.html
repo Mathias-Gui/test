@@ -7,8 +7,8 @@
   <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/three@0.125.1/examples/js/controls/OrbitControls.js"></script>
 </head>
-<body style="margin: 0; overflow: hidden;">
-  
+<body style="margin: 0; overflow: hidden;"> 
+
   <a-scene>
     <!-- Luzes para melhor visualização -->
     <a-light type="ambient" color="#ffffff" intensity="1"></a-light>
@@ -41,4 +41,52 @@
           return;
         }
 
-        // Criando os controles de órbita (rot
+        // Criando os controles de órbita (rotação e zoom)
+        var controls = new THREE.OrbitControls(camera, renderer.domElement);
+        controls.enableDamping = true;  // Suaviza a rotação
+        controls.dampingFactor = 0.25;
+        controls.screenSpacePanning = false;
+        controls.enableZoom = true;  // Habilita zoom via roda do mouse
+        controls.minDistance = 1;    // Distância mínima para o zoom
+        controls.maxDistance = 10;   // Distância máxima para o zoom
+
+        // Esperar o modelo carregar
+        var modelEl = document.getElementById('model');
+        modelEl.addEventListener('model-loaded', function () {
+          var modelObject3D = modelEl.object3D;
+
+          // Calculando o Bounding Box (caixa delimitadora)
+          var box = new THREE.Box3().setFromObject(modelObject3D);
+          var size = new THREE.Vector3();
+          box.getSize(size);  // Obtém as dimensões do modelo
+          
+          // Calculando o centro do modelo
+          var center = box.getCenter(new THREE.Vector3());
+          controls.target.set(center.x, center.y, center.z);  // Define o centro do modelo como alvo da câmera
+
+          // Calculando a distância adequada para a câmera
+          var maxDimension = Math.max(size.x, size.y, size.z);
+          var cameraDistance = maxDimension * 2; // Ajuste a distância conforme necessário
+          camera.position.set(center.x, center.y, cameraDistance); // Ajusta a posição da câmera
+
+          controls.update(); // Atualiza o controle após definir o novo alvo e posição da câmera
+        });
+
+        // Configura os botões do mouse
+        controls.mouseButtons = {
+          LEFT: THREE.MOUSE.ROTATE,  // Rotação ao segurar o botão esquerdo
+          MIDDLE: null,              // Remove o zoom do botão do meio
+          RIGHT: null                // ❌ Desativa qualquer função para o botão direito
+        };
+
+        // Evita que a rotação altere o zoom
+        controls.enablePan = false;  // Desativa o pan (movimento lateral)
+      }
+    });
+
+    // Adiciona o componente de controle de órbita à câmera
+    document.getElementById('cameraRig').setAttribute('orbit-controls', '');
+  </script>
+
+</body>
+</html>
