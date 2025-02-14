@@ -11,14 +11,14 @@
   
   <a-scene>
     <!-- Luzes para melhor visualização -->
-    <a-light type="ambient" color="#ffffff"></a-light>
+    <a-light type="ambient" color="#ffffff" intensity="1"></a-light>
     <a-light type="directional" position="1 1 1" intensity="0.5"></a-light>
 
     <!-- Modelo 3D -->
     <a-entity id="model"
               gltf-model="https://raw.githubusercontent.com/Mathias-Gui/test/main/25163.kab20.000-0.glb"
               scale="1 1 1"
-              position="0 1 -2">
+              position="0 1 -3"> <!-- Ajuste na posição -->
     </a-entity>
 
     <!-- Câmera -->
@@ -47,7 +47,7 @@
         controls.screenSpacePanning = false;
         controls.minDistance = 1;
         controls.maxDistance = 10;
-        controls.target.set(0, 1, 0);
+        controls.target.set(0, 1, 0); // Centraliza o modelo
         controls.update();
 
         // ✅ Permitir rotação apenas segurando o botão esquerdo do mouse
