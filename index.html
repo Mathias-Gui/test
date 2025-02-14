@@ -41,28 +41,30 @@
           return;
         }
 
+        // Criando os controles de órbita (rotação e zoom)
         var controls = new THREE.OrbitControls(camera, renderer.domElement);
-        controls.enableDamping = true;
-        controls.dampingFactor = 0.1;
+        controls.enableDamping = true;  // Suaviza a rotação
+        controls.dampingFactor = 0.25;
         controls.screenSpacePanning = false;
-        controls.minDistance = 1;
-        controls.maxDistance = 10;
-        controls.target.set(0, 1, 0); // Centraliza o modelo
+        controls.enableZoom = true;  // Habilita zoom via roda do mouse
+        controls.minDistance = 1;    // Distância mínima para o zoom
+        controls.maxDistance = 10;   // Distância máxima para o zoom
+        controls.target.set(0, 1, 0);  // O alvo da rotação será o centro do modelo
         controls.update();
 
-        // ✅ Permitir rotação apenas segurando o botão esquerdo do mouse
+        // Configura os botões do mouse
         controls.mouseButtons = {
           LEFT: THREE.MOUSE.ROTATE,  // Rotação ao segurar o botão esquerdo
-          MIDDLE: null,              // Desativa a rotação com o botão do meio
-          RIGHT: null                // Desativa a rotação com o botão direito
+          MIDDLE: THREE.MOUSE.DOLLY, // Zoom com o scroll
+          RIGHT: null                // ❌ Desativa qualquer função para o botão direito
         };
 
-        // 👇 Remove a interação de zoom pelo movimento da rotação
-        controls.enableZoom = true;
-        controls.enablePan = false; // Desativa o movimento de arraste lateral
+        // Evita que a rotação altere o zoom
+        controls.enablePan = false;  // Desativa o pan (movimento lateral)
       }
     });
 
+    // Adiciona o componente de controle de órbita à câmera
     document.getElementById('cameraRig').setAttribute('orbit-controls', '');
   </script>
 
